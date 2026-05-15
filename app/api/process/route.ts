@@ -4,6 +4,9 @@ import { saveClaimSession } from "@/lib/supabase";
 
 export const maxDuration = 60;
 
+// Required for SSE streaming on Vercel — disables response buffering
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
@@ -24,11 +27,9 @@ export async function POST(req: NextRequest) {
     async start(controller) {
       try {
         for await (const event of runPipeline(fileBase64, mimeType)) {
-          // Accumulate result
           if (event.data) Object.assign(fullResult, event.data);
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ ...event, sessionId })}\n\n`));
         }
-        // Save final result to Supabase
         await saveClaimSession(sessionId, fullResult);
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ step: 7, agent: "Complete", status: "done", message: "Analysis complete!", sessionId, data: fullResult })}\n\n`));
       } catch (err) {
@@ -42,9 +43,10 @@ export async function POST(req: NextRequest) {
 
   return new Response(stream, {
     headers: {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
+      "Content-Type": "text/event-stream; charset=utf-8",
+      "Cache-Control": "no-cache, no-transform",
       "Connection": "keep-alive",
+      "X-Accel-Buffering": "no",        // disables Vercel/nginx buffering
       "X-Session-Id": sessionId,
       "Access-Control-Expose-Headers": "X-Session-Id",
     },
