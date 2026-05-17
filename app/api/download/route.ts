@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { getClaimSession } from "@/lib/supabase";
 import type { PipelineResult } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const sessionId = searchParams.get("session");
