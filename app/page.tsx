@@ -70,10 +70,15 @@ export default function Home() {
             const ev = JSON.parse(raw) as StreamEvent & { data?: PipelineResult; sessionId?: string };
             setEvents((prev) => [...prev, ev]);
 
-            // Step 7 is the completion event sent by the API route with all accumulated data
+            // Step 7 is the completion event with all accumulated data
             if (ev.step === 7 && ev.status === "done" && ev.data) {
               setResult(ev.data as PipelineResult);
               setActiveTab("audit");
+            }
+            // Step 0 = pipeline error
+            if (ev.step === 0 && ev.status === "error") {
+              setError(ev.message || "Pipeline failed. Check your API key and try again.");
+              setLoading(false);
             }
             // Also capture session ID from event body as fallback
             if (ev.sessionId && !sid) setSessionId(ev.sessionId);
