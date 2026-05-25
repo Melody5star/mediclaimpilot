@@ -5,7 +5,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 // gemini-flash-latest: confirmed working with this API key (2.0-flash and 1.5-flash both 404/quota-0)
 export const gemini = genAI.getGenerativeModel({
   model: "gemini-flash-latest",
-  generationConfig: { temperature: 0.1 },
+  generationConfig: { temperature: 0 },
 });
 
 export async function askGemini(prompt: string): Promise<string> {
