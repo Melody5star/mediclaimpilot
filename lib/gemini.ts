@@ -2,51 +2,42 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
-// Model priority list — tries each in order if previous is overloaded
-const MODEL_PRIORITY = [
-  "gemini-1.5-flash",
-  "gemini-2.0-flash-lite",
-  "gemini-1.5-flash-8b",
-];
+const gemini = genAI.getGenerativeModel({
+  model: "gemini-flash-latest",
+  generationConfig: { temperature: 0 },
+});
 
-function getModel(modelName: string) {
-  return genAI.getGenerativeModel({
-    model: modelName,
-    generationConfig: { temperature: 0 },
-  });
-}
-
-// Retries across model list on 503 overload errors
-async function withRetry<T>(fn: (model: ReturnType<typeof getModel>) => Promise<T>): Promise<T> {
+// Retries up to 4 times on 503 overload with exponential backoff
+async function withRetry<T>(fn: () => Promise<T>): Promise<T> {
+  const delays = [3000, 6000, 12000, 20000]; // ms between retries
   let lastError: unknown;
-  for (const modelName of MODEL_PRIORITY) {
+  for (let attempt = 0; attempt <= delays.length; attempt++) {
     try {
-      const model = getModel(modelName);
-      return await fn(model);
+      return await fn();
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      const is503 = msg.includes("503") || msg.includes("overloaded") || msg.includes("high demand") || msg.includes("Service Unavailable");
-      const is404 = msg.includes("404") || msg.includes("not found");
-      if (is503 || is404) {
+      const isOverload = msg.includes("503") || msg.includes("overloaded") || msg.includes("high demand") || msg.includes("Service Unavailable");
+      if (isOverload && attempt < delays.length) {
         lastError = err;
-        continue; // try next model
+        await new Promise((res) => setTimeout(res, delays[attempt]));
+        continue;
       }
-      throw err; // non-503 errors bubble up immediately
+      throw err;
     }
   }
   throw lastError;
 }
 
 export async function askGemini(prompt: string): Promise<string> {
-  return withRetry(async (model) => {
-    const result = await model.generateContent(prompt);
+  return withRetry(async () => {
+    const result = await gemini.generateContent(prompt);
     return result.response.text();
   });
 }
 
 export async function askGeminiJSON<T>(prompt: string): Promise<T> {
-  return withRetry(async (model) => {
-    const result = await model.generateContent(
+  return withRetry(async () => {
+    const result = await gemini.generateContent(
       prompt + "\n\nRespond ONLY with valid JSON. No markdown, no explanation."
     );
     const text = result.response.text().trim();
@@ -60,8 +51,8 @@ export async function askGeminiWithFile(
   mimeType: string,
   prompt: string
 ): Promise<string> {
-  return withRetry(async (model) => {
-    const result = await model.generateContent([
+  return withRetry(async () => {
+    const result = await gemini.generateContent([
       { inlineData: { data: fileBase64, mimeType } },
       prompt,
     ]);
@@ -74,8 +65,8 @@ export async function askGeminiWithFileJSON<T>(
   mimeType: string,
   prompt: string
 ): Promise<T> {
-  return withRetry(async (model) => {
-    const result = await model.generateContent([
+  return withRetry(async () => {
+    const result = await gemini.generateContent([
       { inlineData: { data: fileBase64, mimeType } },
       prompt + "\n\nRespond ONLY with valid JSON. No markdown, no explanation.",
     ]);
