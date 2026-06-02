@@ -16,7 +16,7 @@ async function withRetry<T>(fn: () => Promise<T>): Promise<T> {
       return await fn();
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      const isOverload = msg.includes("503") || msg.includes("overloaded") || msg.includes("high demand") || msg.includes("Service Unavailable");
+      const isOverload = msg.includes("503") || msg.includes("429") || msg.includes("overloaded") || msg.includes("high demand") || msg.includes("Service Unavailable") || msg.includes("Too Many Requests") || msg.includes("quota");
       if (isOverload && attempt < delays.length) {
         lastError = err;
         await new Promise((res) => setTimeout(res, delays[attempt]));

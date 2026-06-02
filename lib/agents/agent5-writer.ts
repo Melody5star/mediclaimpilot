@@ -209,8 +209,8 @@ export async function agent5Writer(
     try {
       const doc = await task();
       if (doc) docs.push(doc);
-    } catch {
-      // skip failed document — still return the rest
+    } catch (err) {
+      console.error("[Agent5] Document generation failed:", err instanceof Error ? err.message : err);
     }
   }
 
