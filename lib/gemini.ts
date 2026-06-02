@@ -9,7 +9,7 @@ const gemini = genAI.getGenerativeModel({
 
 // Retries up to 4 times on 503 overload with exponential backoff
 async function withRetry<T>(fn: () => Promise<T>): Promise<T> {
-  const delays = [3000, 6000, 12000, 20000]; // ms between retries
+  const delays = [2000, 4000, 8000]; // ms between retries — kept short for Vercel 60s timeout
   let lastError: unknown;
   for (let attempt = 0; attempt <= delays.length; attempt++) {
     try {

@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { runPipeline } from "@/lib/pipeline";
 import { saveClaimSession } from "@/lib/supabase";
 
-export const maxDuration = 60;
+export const maxDuration = 300; // Vercel Pro allows up to 300s for streaming routes
 
 // Required for SSE streaming on Vercel — disables response buffering
 export const dynamic = "force-dynamic";

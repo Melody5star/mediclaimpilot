@@ -191,17 +191,28 @@ export async function agent5Writer(
   const docs: GeneratedDocument[] = [];
   const types = plan.items.map((i) => i.documentType);
 
-  await Promise.all([
-    types.includes("fdcpa_validation") && writeFDCPA(profile).then((d) => docs.push(d)),
-    types.includes("hipaa_records") && writeHIPAARequest(profile).then((d) => docs.push(d)),
-    types.includes("bill_dispute") && audit.errorsFound.length > 0 && writeBillDispute(profile, audit).then((d) => docs.push(d)),
-    types.includes("internal_appeal") && denial.denials.length > 0 && writeInternalAppeal(profile, denial).then((d) => docs.push(d)),
-    types.includes("nsa_complaint") && writeNSAComplaint(profile).then((d) => docs.push(d)),
-  ].filter(Boolean));
+  // Sequential — avoids simultaneous Gemini calls hitting rate limits or Vercel timeout
+  const tasks: Array<() => Promise<GeneratedDocument | null>> = [
+    types.includes("bill_dispute") && audit.errorsFound.length > 0
+      ? () => writeBillDispute(profile, audit) : null,
+    types.includes("internal_appeal") && denial.denials.length > 0
+      ? () => writeInternalAppeal(profile, denial) : null,
+    types.includes("hipaa_records")
+      ? () => writeHIPAARequest(profile) : null,
+    types.includes("fdcpa_validation")
+      ? () => writeFDCPA(profile) : null,
+    types.includes("nsa_complaint")
+      ? () => writeNSAComplaint(profile) : null,
+  ].filter(Boolean) as Array<() => Promise<GeneratedDocument | null>>;
 
-  // Sort by priority order from action plan
-  const order = ["fdcpa_validation", "hipaa_records", "bill_dispute", "nsa_complaint", "internal_appeal", "external_review", "state_commissioner", "dol_complaint", "cfpb_complaint"];
-  docs.sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type));
+  for (const task of tasks) {
+    try {
+      const doc = await task();
+      if (doc) docs.push(doc);
+    } catch {
+      // skip failed document — still return the rest
+    }
+  }
 
   return { documents: docs };
 }
