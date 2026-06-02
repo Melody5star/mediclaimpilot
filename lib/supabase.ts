@@ -37,3 +37,16 @@ export async function getClaimSession(sessionId: string) {
     return null;
   }
 }
+
+export async function saveEmailLead(email: string, sessionId: string, planType?: string) {
+  try {
+    const { error } = await getClient()
+      .from("email_leads")
+      .insert({ email, session_id: sessionId, plan_type: planType ?? null });
+    if (error) console.error("Email lead save error:", error);
+    return !error;
+  } catch (err) {
+    console.error("Email lead save failed:", err);
+    return false;
+  }
+}

@@ -32,3 +32,26 @@ create policy "service role full access"
 
 -- Cleanup old sessions after 24h (optional — run as cron or pg_cron if available)
 -- delete from claim_sessions where created_at < now() - interval '24 hours';
+
+-- ============================================
+-- email_leads: captures user emails before showing results
+-- ============================================
+create table if not exists email_leads (
+  id          uuid primary key default gen_random_uuid(),
+  email       text not null,
+  session_id  text references claim_sessions(id) on delete set null,
+  plan_type   text,
+  created_at  timestamptz default now()
+);
+
+-- Allow anyone to insert their own email (no login required)
+alter table email_leads enable row level security;
+
+create policy "anyone can insert email lead"
+  on email_leads for insert
+  with check (true);
+
+-- Only service role can read (protects user emails)
+create policy "service role can read email leads"
+  on email_leads for select
+  using (false);

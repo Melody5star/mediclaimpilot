@@ -7,6 +7,7 @@ import AuditResults from "@/app/components/AuditResults";
 import DenialResults from "@/app/components/DenialResults";
 import DocumentList from "@/app/components/DocumentList";
 import DeadlineDashboard from "@/app/components/DeadlineDashboard";
+import EmailGate from "@/app/components/EmailGate";
 import type { StreamEvent, PipelineResult } from "@/lib/types";
 
 type Tab = "progress" | "audit" | "denial" | "documents" | "deadlines";
@@ -18,6 +19,7 @@ export default function Home() {
   const [sessionId, setSessionId] = useState<string>("");
   const [activeTab, setActiveTab] = useState<Tab>("progress");
   const [error, setError] = useState<string | null>(null);
+  const [emailUnlocked, setEmailUnlocked] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
   const handleFile = async (file: File) => {
@@ -70,10 +72,10 @@ export default function Home() {
             const ev = JSON.parse(raw) as StreamEvent & { data?: PipelineResult; sessionId?: string };
             setEvents((prev) => [...prev, ev]);
 
-            // Step 7 is the completion event with all accumulated data
+            // Step 7 is the completion event — show email gate before results
             if (ev.step === 7 && ev.status === "done" && ev.data) {
               setResult(ev.data as PipelineResult);
-              setActiveTab("audit");
+              // emailUnlocked stays false → EmailGate modal appears
             }
             // Step 0 = pipeline error
             if (ev.step === 0 && ev.status === "error") {
@@ -108,6 +110,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Email gate — shown when analysis is done but email not yet submitted */}
+      {result && !emailUnlocked && (
+        <EmailGate
+          sessionId={sessionId}
+          planType={result.claimProfile?.planType}
+          onUnlock={() => { setEmailUnlocked(true); setActiveTab("audit"); }}
+        />
+      )}
       {/* Header */}
       <header className="bg-white/80 backdrop-blur border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -150,6 +160,21 @@ export default function Home() {
                 <div key={text} className="flex items-center gap-1.5 text-gray-600">
                   <Icon className="w-4 h-4 text-blue-500" /> {text}
                 </div>
+              ))}
+            </div>
+
+            {/* US coverage + HIPAA trust row */}
+            <div className="flex flex-wrap justify-center gap-2 pt-3">
+              {[
+                "Medicare & Medicaid",
+                "ACA Plans",
+                "ERISA",
+                "No Surprises Act",
+                "HIPAA-Safe",
+              ].map((label) => (
+                <span key={label} className="text-xs bg-white border border-gray-200 text-gray-600 px-3 py-1 rounded-full font-medium shadow-sm">
+                  {label}
+                </span>
               ))}
             </div>
           </div>
@@ -210,7 +235,7 @@ export default function Home() {
             {result && (
               <div className="text-center">
                 <button
-                  onClick={() => { setResult(null); setEvents([]); setSessionId(""); setActiveTab("progress"); setError(null); }}
+                  onClick={() => { setResult(null); setEvents([]); setSessionId(""); setActiveTab("progress"); setError(null); setEmailUnlocked(false); }}
                   className="text-sm text-gray-500 hover:text-blue-600 underline transition-colors"
                 >
                   Analyze another document
@@ -237,8 +262,14 @@ export default function Home() {
         )}
       </main>
 
-      <footer className="text-center text-xs text-gray-400 py-8">
-        MediClaimPilot — Built for the AI Agents Hackathon · Not legal advice · Always review letters before sending
+      <footer className="text-center text-xs text-gray-400 py-8 border-t border-gray-100 space-y-2">
+        <p>MediClaimPilot — AI-Powered US Medical Bill Auditor · Not legal advice · Always review letters before sending</p>
+        <p className="flex flex-wrap justify-center gap-3">
+          <a href="/privacy" className="underline hover:text-gray-600">Privacy Policy</a>
+          <a href="/terms" className="underline hover:text-gray-600">Terms of Service</a>
+          <span>HIPAA-Safe · No PHI Stored</span>
+          <span>Powered by Google Gemini AI</span>
+        </p>
       </footer>
     </div>
   );
