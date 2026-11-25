@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use MediClaimPilot or its technical report, please cite it as below."
+title: "MediClaimPilot: A Multi-Agent LLM System for Auditing US Medical Bills and Drafting Patient Disputes"
+type: software
+authors:
+  - given-names: Anamika
+    family-names: Bajpai
+version: 1.0.0
+date-released: 2026-11-25
+license: MIT
+repository-code: "https://github.com/Melody5star/mediclaimpilot"
+abstract: >-
+  MediClaimPilot is an open-source system that splits US medical bill review
+  into six agents (parser, bill auditor, denial analyzer, strategy agent,
+  document writer and deadline tracker). It flags charges worth questioning
+  using CMS Medicare fee schedule rates and LLM review, decodes denial codes,
+  and drafts dispute letters for human review. The accompanying technical
+  report documents the design, one real-world case study and the system's
+  limitations.
+keywords:
+  - medical billing
+  - LLM agents
+  - multi-agent systems
+  - healthcare
+  - patient advocacy
