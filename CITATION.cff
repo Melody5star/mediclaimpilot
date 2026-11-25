@@ -5,7 +5,7 @@ type: software
 authors:
   - given-names: Anamika
     family-names: Bajpai
-version: 1.0.0
+version: 1.1.0
 date-released: 2026-11-25
 license: MIT
 repository-code: "https://github.com/Melody5star/mediclaimpilot"
