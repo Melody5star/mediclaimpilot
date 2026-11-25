@@ -51,7 +51,7 @@ export default function EmailGate({ sessionId, planType, onUnlock }: EmailGatePr
         <ul className="text-left space-y-2 text-sm text-gray-600">
           {[
             "No spam — we send only your report updates",
-            "HIPAA-safe — your document is never stored",
+            "Privacy-first — your document is never stored",
             "Unsubscribe anytime, one click",
           ].map((point) => (
             <li key={point} className="flex items-start gap-2">

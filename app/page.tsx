@@ -149,12 +149,12 @@ export default function Home() {
               <span className="text-blue-600">Unfair Medical Bills</span>
             </h1>
             <p className="text-gray-500 text-lg max-w-xl mx-auto">
-              80% of medical bills contain errors. Insurance denies 86% of valid claims. Our AI audits every charge, decodes every denial, and writes your appeal letters — instantly and free.
+              Upload your bill or EOB. Our AI checks every charge, decodes every denial, and drafts your dispute and appeal letters for you to review — free.
             </p>
             <div className="flex flex-wrap justify-center gap-4 pt-2 text-sm">
               {[
-                { icon: FileSearch, text: "Detects billing fraud" },
-                { icon: Scale,      text: "Cites federal law" },
+                { icon: FileSearch, text: "Flags billing errors" },
+                { icon: Scale,      text: "Explains your rights" },
                 { icon: Shield,     text: "Writes appeal letters" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-1.5 text-gray-600">
@@ -170,7 +170,7 @@ export default function Home() {
                 "ACA Plans",
                 "ERISA",
                 "No Surprises Act",
-                "HIPAA-Safe",
+                "No Documents Stored",
               ].map((label) => (
                 <span key={label} className="text-xs bg-white border border-gray-200 text-gray-600 px-3 py-1 rounded-full font-medium shadow-sm">
                   {label}
@@ -249,9 +249,9 @@ export default function Home() {
         {!loading && !result && (
           <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto text-center pt-4">
             {[
-              { stat: "80%",  label: "of bills have errors" },
-              { stat: "$68B", label: "in annual overcharges" },
-              { stat: "86%",  label: "of denials are avoidable" },
+              { stat: "6",    label: "AI agents check your bill" },
+              { stat: "0",    label: "documents stored" },
+              { stat: "Free", label: "for patients" },
             ].map(({ stat, label }) => (
               <div key={stat} className="p-4 bg-white/70 rounded-xl border border-gray-100">
                 <p className="text-2xl font-extrabold text-blue-600">{stat}</p>
@@ -267,7 +267,7 @@ export default function Home() {
         <p className="flex flex-wrap justify-center gap-3">
           <a href="/privacy" className="underline hover:text-gray-600">Privacy Policy</a>
           <a href="/terms" className="underline hover:text-gray-600">Terms of Service</a>
-          <span>HIPAA-Safe · No PHI Stored</span>
+          <span>No Documents Stored</span>
           <span>Powered by Google Gemini AI</span>
         </p>
       </footer>

@@ -27,13 +27,13 @@ ${errorList}
 Write a professional letter that:
 1. States patient identity and account number
 2. Lists each error specifically with CPT code and dollar amount
-3. Cites the legal basis for the dispute
+3. Cites only the specific billing rule behind each error (for example CMS NCCI edits or the Medicare fee schedule). Do not allege fraud, and do not cite the False Claims Act or any other fraud statute.
 4. Demands a corrected itemized bill within 30 days
 5. States the patient will pay only the correct amount
 6. Requests written confirmation of corrections
 7. Includes signature line
 
-Keep it firm, professional, and legally grounded. 400-500 words.
+Keep it firm, polite and factual: ask the provider to review and correct the bill. 400-500 words.
 `);
 
   return {

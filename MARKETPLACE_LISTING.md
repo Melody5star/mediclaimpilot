@@ -12,7 +12,7 @@ MediClaimPilot — AI Medical Bill Auditor
 Fight unfair US medical bills with 6 AI agents powered by Google Gemini
 
 **Short Description (max 160 chars):**
-AI agent that audits US medical bills, decodes insurance denials, and writes HIPAA-safe appeal letters citing federal law — free for patients.
+AI agent that audits US medical bills, decodes insurance denials, and drafts appeal letters for you to review — free for patients.
 
 **Categories (select both):**
 - Healthcare & Life Sciences
@@ -28,12 +28,12 @@ Free
 MediClaimPilot is an AI-powered agent that helps American patients fight back against incorrect medical bills and wrongful insurance denials.
 
 **The Problem**
-80% of US medical bills contain billing errors. Insurance companies deny 86% of valid claims, knowing most patients won't appeal. The average overcharge is $1,300 per hospital visit. Patients lose billions of dollars every year simply because they don't know their rights.
+US medical bills and insurance documents are hard to check without coding knowledge, so billing errors and wrongful denials can go unchallenged. [Add sourced statistics here before submitting.]
 
 **What MediClaimPilot Does**
 Upload any US medical bill or Explanation of Benefits (EOB) and our 6-agent AI pipeline — powered by Google Gemini — does the work in under 60 seconds:
 
-→ BILL AUDIT: Detects duplicate charges, upcoding, unbundling, phantom charges, and facility fee abuse. Compares every CPT code against Medicare rate benchmarks.
+→ BILL AUDIT: Flags possible duplicate charges, unbundling, upcoding and phantom charges for you to check. Compares every CPT code against Medicare rate benchmarks.
 
 → DENIAL DECODER: Translates every CARC and RARC code into plain English. Identifies which federal law applies to your denial — ERISA, ACA, No Surprises Act, or MHPAEA.
 
@@ -45,7 +45,7 @@ Upload any US medical bill or Explanation of Benefits (EOB) and our 6-agent AI p
 Medicare, Medicare Advantage, Medicaid, ACA Marketplace plans, ERISA employer-sponsored plans, No Surprises Act surprise bills, Mental Health Parity (MHPAEA) cases.
 
 **Privacy & Compliance**
-HIPAA-safe design — your document is processed in memory only and never permanently stored. No PHI is retained after your session ends. Powered by Google Gemini AI under Google's enterprise data processing terms.
+Privacy-first design — your document is processed in memory only and never permanently stored. No PHI is retained after your session ends. Powered by Google Gemini AI under Google's enterprise data processing terms.
 
 **Who It's For**
 - Individual US patients disputing hospital bills
@@ -59,7 +59,7 @@ HIPAA-safe design — your document is processed in memory only and never perman
 
 1. Detects billing errors and overcharges using Medicare rate benchmarks — free for all US patients
 2. Decodes insurance denial codes (CARC/RARC) and generates appeal letters citing ERISA, ACA & No Surprises Act
-3. HIPAA-safe: documents processed in memory only, zero PHI stored, powered by Google Gemini AI
+3. Privacy-first: documents processed in memory only, not stored, powered by Google Gemini AI
 
 ---
 
