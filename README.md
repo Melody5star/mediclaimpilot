@@ -1,10 +1,12 @@
 # MediClaimPilot — AI Medical Bill Auditor & Insurance Denial Fighter
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24535521.svg)](https://doi.org/10.5281/zenodo.24535521)
+
 **Fight back against unfair US medical bills using 6 AI agents powered by Google Gemini.**
 
 > MediClaimPilot reads a US medical bill or EOB, flags charges worth questioning, decodes denial codes, and drafts dispute and appeal letters for you to review — free for patients.
 
-**Technical report:** *MediClaimPilot: A Multi-Agent LLM System for Auditing US Medical Bills and Drafting Patient Disputes* (v1.0, November 2026) — see [`docs/`](docs/) and [Citation](#citation). It describes the design, one real-world case study, and the system's limits.
+**Technical report:** *MediClaimPilot: A Multi-Agent LLM System for Auditing US Medical Bills and Drafting Patient Disputes* (v1.1, November 2026) — see [`docs/`](docs/) and [Citation](#citation). It describes the design, one real-world case study, and the system's limits.
 
 ---
 
@@ -126,7 +128,7 @@ MIT License — free to use, modify, and distribute.
 
 ## Citation
 
-If you use MediClaimPilot or its technical report, please cite it using [`CITATION.cff`](CITATION.cff). A DOI will be added here once the release is archived on Zenodo.
+If you use MediClaimPilot or its technical report, please cite it using [`CITATION.cff`](CITATION.cff). The archived release and technical report have the DOI [10.5281/zenodo.24535521](https://doi.org/10.5281/zenodo.24535521).
 
 ---
 
